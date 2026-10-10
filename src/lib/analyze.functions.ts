@@ -60,7 +60,7 @@ export const analyzeItem = createServerFn({ method: "POST" })
     return d;
   })
   .handler(async ({ data }): Promise<{ ok: true; listing: Listing } | { ok: false; error: string }> => {
-    const key = process.env.LOVABLE_API_KEY;
+    const key = process.env["LOVABLE_API_KEY"];
     if (!key) return { ok: false, error: "KI ist nicht konfiguriert." };
     const res = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
       method: "POST",

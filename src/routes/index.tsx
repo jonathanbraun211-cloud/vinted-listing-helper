@@ -37,7 +37,7 @@ async function compress(file: File): Promise<string> {
   return c.toDataURL("image/jpeg", 0.82);
 }
 
-function Slot({ label, icon: Icon, value, onChange }: { label: string; icon: typeof Camera; value?: string; onChange: (v?: string) => void }) {
+function Slot({ label, icon: Icon, value, onChange }: { label: string; icon: typeof Camera; value: string | undefined; onChange: (v?: string) => void }) {
   const ref = useRef<HTMLInputElement>(null);
   const [drag, setDrag] = useState(false);
   const take = async (f?: File) => { if (f && f.type.startsWith("image/")) onChange(await compress(f)); };
