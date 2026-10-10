@@ -108,7 +108,7 @@ function Index() {
   const fullText = listing
     ? `${listing.title}\n\n${listing.description}\n\n${listing.hashtags.join(" ")}`
     : "";
-  const attrs = listing ? [
+  const attrs: [string, string][] = listing ? [
     ["Kategorie", listing.category], ["Marke", listing.brand], ["Größe", listing.size],
     ["Zustand", listing.condition], ["Farbe", listing.color], ["Material", listing.material],
   ] : [];
