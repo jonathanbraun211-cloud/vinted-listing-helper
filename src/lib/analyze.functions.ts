@@ -14,6 +14,9 @@ export type Listing = {
   price_min: number;
   price_max: number;
   price_reason: string;
+  reason_min: string;
+  reason_optimal: string;
+  reason_max: string;
 };
 
 const schema = {
@@ -21,7 +24,7 @@ const schema = {
   additionalProperties: false,
   required: [
     "title", "description", "hashtags", "category", "brand", "size", "material",
-    "condition", "color", "price_suggested", "price_min", "price_max", "price_reason",
+    "condition", "color", "price_suggested", "price_min", "price_max", "price_reason", "reason_min", "reason_optimal", "reason_max",
   ],
   properties: {
     title: { type: "string" },
@@ -37,6 +40,9 @@ const schema = {
     price_min: { type: "number" },
     price_max: { type: "number" },
     price_reason: { type: "string" },
+    reason_min: { type: "string" },
+    reason_optimal: { type: "string" },
+    reason_max: { type: "string" },
   },
 };
 
@@ -48,7 +54,13 @@ Wenn etwas nicht erkennbar ist, schreibe "Unbekannt".
 Titel: max. 60 Zeichen, Format "Marke Artikel Farbe Größe", suchoptimiert.
 Beschreibung: 3-5 sympathische, ehrliche Sätze auf Deutsch, mit Material, Passform, Zustand, ohne Emojis-Spam (max. 2).
 Hashtags: 5-8 relevante, ohne Leerzeichen, mit #.
-Preis in EUR: realistisch nach aktuellen Vinted-Second-Hand-Preisen, kurze Begründung.`;
+Preise in EUR, realistisch nach aktuellen Vinted-Second-Hand-Preisen für genau diese Marke, Artikelart und diesen Zustand:
+- price_min = Mindestpreis (Schnellverkauf / Untergrenze, verkauft sich meist innerhalb weniger Tage)
+- price_suggested = Optimalpreis (empfohlener Angebotspreis, bestes Verhältnis aus Erlös und Verkaufsdauer)
+- price_max = Maximalpreis (Startpreis für Verhandlungen / Bestpreis, wenn Käufer handeln)
+Es muss gelten: price_min < price_suggested < price_max.
+price_reason: 2-3 verständliche Sätze Marktbegründung (Markenwert, typische Vinted-Preise vergleichbarer Artikel, Nachfrage/Saison, Zustand, Neupreis-Bezug).
+reason_min / reason_optimal / reason_max: je 1 kurzer Satz, wann dieser Preis sinnvoll ist.`;
 
 export const analyzeItem = createServerFn({ method: "POST" })
   .inputValidator((d: { images: string[] }) => {
