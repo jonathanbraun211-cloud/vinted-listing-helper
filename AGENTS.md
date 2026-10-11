@@ -10,3 +10,6 @@
 <!-- LOVABLE:END -->
 
 - Keep listing SEO constraints in a browser-safe shared module and validate AI output before returning a successful listing, so generated and copied listings obey the same rules.
+- Apply photo corrections locally with conservative global Canvas adjustments and retain originals for condition analysis, so corrections never conceal defects from the listing generator.
+- Validate detected flaw phrases against the generated description in a browser-safe module before returning success, so copied listings retain disclosed defects.
+- Treat timed analysis steps as an explicitly labeled workflow illustration, not live provider progress or verified market research.
