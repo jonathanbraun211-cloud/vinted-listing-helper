@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep listing SEO constraints in a browser-safe shared module and validate AI output before returning a successful listing, so generated and copied listings obey the same rules.
