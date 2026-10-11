@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Camera, Tag, Sparkles, Copy, Check, Loader2, X, ShieldCheck, Coins } from "lucide-react";
 import { VintedHelper } from "@/components/VintedHelper";
+import { ChevronDown } from "lucide-react";
 import { analyzeItem, type Listing } from "@/lib/analyze.functions";
 
 export const Route = createFileRoute("/")({
@@ -33,7 +34,9 @@ async function compress(file: File): Promise<string> {
   const s = Math.min(1, 1280 / Math.max(img.width, img.height));
   const c = document.createElement("canvas");
   c.width = img.width * s; c.height = img.height * s;
-  c.getContext("2d")!.drawImage(img, 0, 0, c.width, c.height);
+  const context = c.getContext("2d");
+  if (!context) { URL.revokeObjectURL(url); throw new Error("Bild konnte nicht verarbeitet werden."); }
+  context.drawImage(img, 0, 0, c.width, c.height);
   URL.revokeObjectURL(url);
   return c.toDataURL("image/jpeg", 0.82);
 }
@@ -149,25 +152,28 @@ function Index() {
 
         {listing && (
           <section id="ergebnis" className="mt-8 space-y-4">
-            <div className="rounded-2xl border border-border bg-card p-4">
+            <div className="rounded-2xl border border-border bg-card p-3 sm:p-4">
               <div className="text-xs font-semibold uppercase text-muted-foreground">Preiseinschätzung</div>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {([
-                  ["Mindestpreis", "Schnellverkauf", listing.price_min, listing.reason_min, false],
-                  ["Optimalpreis", "Empfohlen", listing.price_suggested, listing.reason_optimal, true],
-                  ["Maximalpreis", "Verhandlungsstart", listing.price_max, listing.reason_max, false],
-                ] as const).map(([t, sub, v, r, hi]) => (
-                  <div key={t} className={`rounded-xl p-3 ${hi ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
-                    <div className="text-[11px] font-semibold uppercase tracking-wide opacity-80">{t}</div>
-                    <div className="font-display text-2xl font-extrabold">{v.toFixed(2).replace(".", ",")} €</div>
-                    <div className="text-[11px] font-medium opacity-80">{sub}</div>
-                    <p className="mt-1.5 text-xs leading-snug opacity-90">{r}</p>
+                  ["Mindestpreis", listing.price_min, listing.reason_min, false],
+                  ["Optimalpreis", listing.price_suggested, listing.reason_optimal, true],
+                  ["Maximalpreis", listing.price_max, listing.reason_max, false],
+                ] as const).map(([t, v, r, hi]) => (
+                  <div key={t} className={`min-w-0 rounded-lg px-2 py-3 sm:px-3 ${hi ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
+                    <div className="text-[10px] font-semibold sm:text-[11px] opacity-80">{t}</div>
+                    <div className="mt-1 break-words font-display text-lg font-extrabold tabular-nums sm:text-2xl">{v.toFixed(2).replace(".", ",")} €</div>
+                    <p className="mt-1 text-[11px] leading-snug opacity-90 sm:text-xs">{r}</p>
                   </div>
                 ))}
               </div>
-              <div className="mt-3 rounded-xl bg-muted p-3 text-sm">
-                <span className="font-semibold">Marktbegründung: </span>{listing.price_reason}
-              </div>
+              <details className="group mt-3 border-t border-border pt-2 text-xs text-muted-foreground">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 rounded-md py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                  <span>Marktbegründung · KI-Schätzung</span>
+                  <ChevronDown className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none" />
+                </summary>
+                <p className="pt-2 leading-relaxed">{listing.price_reason}</p>
+              </details>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-4">
