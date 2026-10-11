@@ -1,7 +1,7 @@
 export const titleSchema = { type: "string", maxLength: 90, pattern: "^[^|]+ \\| [^|]+ \\| [^|]+ \\| [^|]+$" };
 export const hashtagsSchema = {
   type: "array", minItems: 8, maxItems: 12,
-  items: { type: "string", pattern: "^#[\\p{L}\\p{N}_]+$" },
+  items: { type: "string", pattern: "^#[a-zA-Z0-9_À-ÖØ-öø-ÿ]+$" },
 };
 export const priceHintSchema = { type: "string", maxLength: 60 };
 
