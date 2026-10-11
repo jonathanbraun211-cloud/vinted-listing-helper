@@ -2,10 +2,10 @@
 export function boostPixels(source: Uint8ClampedArray): Uint8ClampedArray {
   const result = new Uint8ClampedArray(source);
   let sum = 0, count = 0, neutralCount = 0;
-  const channels = [0, 0, 0];
+  const channels: [number, number, number] = [0, 0, 0];
   for (let i = 0; i < source.length; i += 4) {
     if (source[i + 3] === 0) continue;
-    const r = source[i], g = source[i + 1], b = source[i + 2];
+    const r = source[i] ?? 0, g = source[i + 1] ?? 0, b = source[i + 2] ?? 0;
     const light = .2126 * r + .7152 * g + .0722 * b;
     sum += light; count++;
     // Correct warmth only when near-neutral, bright reference pixels exist.
@@ -23,7 +23,7 @@ export function boostPixels(source: Uint8ClampedArray): Uint8ClampedArray {
   for (let i = 0; i < source.length; i += 4) {
     if (source[i + 3] === 0) continue;
     for (let c = 0; c < 3; c++) {
-      const balanced = Math.min(255, source[i + c] * gains[c]);
+      const balanced = Math.min(255, (source[i + c] ?? 0) * (gains[c] ?? 1));
       const lit = 255 * Math.pow(balanced / 255, gamma);
       result[i + c] = Math.round(Math.min(255, Math.max(0, (lit - 128) * contrast + 128)));
     }

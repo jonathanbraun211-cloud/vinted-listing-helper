@@ -20,7 +20,7 @@ async function compress(file: File): Promise<string> {
 }
 
 export function PhotoSlot({ label, icon: Icon, value, onChange, onOriginalChange, disabled }: {
-  label: string; icon: typeof Camera; value?: string; onChange: (value?: string) => void; onOriginalChange: (value?: string) => void; disabled: boolean;
+  label: string; icon: typeof Camera; value: string | undefined; onChange: (value?: string) => void; onOriginalChange: (value?: string) => void; disabled: boolean;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const generation = useRef(0);

@@ -19,7 +19,7 @@ export function AnalysisFeedback() {
     <ol className="space-y-3">{steps.map(([Icon, text], index) => <li key={text} className={`flex items-center gap-3 text-sm transition-colors motion-reduce:transition-none ${index <= step ? "text-foreground" : "text-muted-foreground"}`}>
       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">{index === step ? <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" /> : index < step ? <Check className="h-4 w-4" /> : <Icon className="h-4 w-4" />}</span>{text}
     </li>)}</ol>
-    <p role="status" aria-live="polite" className="sr-only">{steps[step][1]}</p>
+    <p role="status" aria-live="polite" className="sr-only">{steps[step]?.[1]}</p>
     <p className="mt-3 text-[11px] text-muted-foreground">Ablaufanzeige, kein Live-Protokoll · Preise sind KI-Schätzungen, kein Vinted-Liveabgleich.</p>
   </section>;
 }
