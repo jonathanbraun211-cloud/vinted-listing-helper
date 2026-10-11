@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Camera, Tag, Sparkles, Copy, Check, Loader2, X, ShieldCheck, Coins } from "lucide-react";
+import { VintedHelper } from "@/components/VintedHelper";
 import { analyzeItem, type Listing } from "@/lib/analyze.functions";
 
 export const Route = createFileRoute("/")({
@@ -148,10 +149,25 @@ function Index() {
 
         {listing && (
           <section id="ergebnis" className="mt-8 space-y-4">
-            <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
-              <div className="text-xs font-semibold uppercase tracking-wider opacity-80">Preisvorschlag</div>
-              <div className="font-display text-4xl font-extrabold">{listing.price_suggested.toFixed(2).replace(".", ",")} €</div>
-              <div className="text-sm opacity-90">Spanne {listing.price_min.toFixed(0)}–{listing.price_max.toFixed(0)} € · {listing.price_reason}</div>
+            <div className="rounded-2xl border border-border bg-card p-4">
+              <div className="text-xs font-semibold uppercase text-muted-foreground">Preiseinschätzung</div>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {([
+                  ["Mindestpreis", "Schnellverkauf", listing.price_min, listing.reason_min, false],
+                  ["Optimalpreis", "Empfohlen", listing.price_suggested, listing.reason_optimal, true],
+                  ["Maximalpreis", "Verhandlungsstart", listing.price_max, listing.reason_max, false],
+                ] as const).map(([t, sub, v, r, hi]) => (
+                  <div key={t} className={`rounded-xl p-3 ${hi ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
+                    <div className="text-[11px] font-semibold uppercase tracking-wide opacity-80">{t}</div>
+                    <div className="font-display text-2xl font-extrabold">{v.toFixed(2).replace(".", ",")} €</div>
+                    <div className="text-[11px] font-medium opacity-80">{sub}</div>
+                    <p className="mt-1.5 text-xs leading-snug opacity-90">{r}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 rounded-xl bg-muted p-3 text-sm">
+                <span className="font-semibold">Marktbegründung: </span>{listing.price_reason}
+              </div>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-4">
@@ -183,6 +199,7 @@ function Index() {
               <CopyBtnBig text={fullText} />
               <a href="https://www.vinted.de/items/new" target="_blank" rel="noreferrer" className="flex items-center justify-center rounded-2xl border-2 border-primary py-3.5 font-bold text-primary">Vinted öffnen</a>
             </div>
+            <VintedHelper listing={listing} />
           </section>
         )}
 
