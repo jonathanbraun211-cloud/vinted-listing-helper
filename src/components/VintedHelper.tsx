@@ -2,6 +2,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Bookmark, Check, ChevronDown, Copy, Wand2 } from "lucide-react";
 import type { Listing } from "@/lib/analyze.functions";
+import { Button } from "@/components/ui/button";
+import { copyWithFeedback } from "@/lib/copy-feedback";
 
 const MARK = "KLEIDR::";
 
@@ -31,14 +33,20 @@ export function VintedHelper({ listing }: { listing: Listing }) {
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"iphone" | "android" | "pc">("iphone");
   const [codeOk, setCodeOk] = useState(false);
+  const [listingOk, setListingOk] = useState(false);
 
   const copyListing = async () => {
-    await navigator.clipboard.writeText(encode(listing));
-    toast.success("Kopiert! Jetzt Vinted öffnen und das Lesezeichen „kleidr“ antippen.");
+    try {
+      await copyWithFeedback(encode(listing));
+      setListingOk(true); setTimeout(() => setListingOk(false), 1500);
+      toast.success("Kopiert! Jetzt Vinted öffnen und das Lesezeichen „kleidr“ antippen.");
+    } catch { toast.error("Kopieren nicht möglich. Bitte die einzelnen Texte manuell markieren."); }
   };
   const copyCode = async () => {
-    await navigator.clipboard.writeText(BOOKMARKLET);
-    setCodeOk(true); setTimeout(() => setCodeOk(false), 1500);
+    try {
+      await copyWithFeedback(BOOKMARKLET);
+      setCodeOk(true); setTimeout(() => setCodeOk(false), 1500);
+    } catch { toast.error("Kopieren nicht möglich. Bitte Zwischenablage im Browser erlauben."); }
   };
 
   return (
@@ -49,9 +57,9 @@ export function VintedHelper({ listing }: { listing: Listing }) {
       </div>
       <p className="mt-1 text-sm text-muted-foreground">Titel, Beschreibung und Optimalpreis werden auf Vinted automatisch eingetragen – ohne Bot, ohne Login, ohne Bann-Risiko.</p>
 
-      <button onClick={copyListing} className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-bold text-primary-foreground">
-        <Copy className="h-4 w-4" />Für Vinted kopieren
-      </button>
+      <Button onClick={copyListing} className="mt-3 h-auto flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-bold text-primary-foreground">
+        {listingOk ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}{listingOk ? "Kopiert!" : "Für Vinted kopieren"}
+      </Button>
       <ol className="mt-3 space-y-2 text-sm">
         <Step n={1}>Oben auf <b>„Für Vinted kopieren“</b> tippen.</Step>
         <Step n={2}>Auf Vinted <b>„Artikel verkaufen“</b> öffnen (im Browser, nicht in der App).</Step>
